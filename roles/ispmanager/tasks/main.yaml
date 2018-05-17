@@ -1,0 +1,81 @@
+---
+- name: Create dir for ISPmanager
+  file:
+    path: /usr/local/ispmgr
+    state: directory
+    mode: 0755
+
+- name: ISPmanager 4 Lite install x64 bit
+  unarchive:
+    src: http://ru.download.ispsystem.com/Linux-cc6/x86_64/ISPmanager-Lite/install.stable.tgz
+    dest: /usr/local/ispmgr
+    remote_src: yes
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6" and ansible_architecture == 'x86_64'
+
+- name: ISPmanager 4 Lite install x32 bit
+  unarchive:
+    src: http://ru.download.ispsystem.com/Linux-cc6/i686/ISPmanager-Lite/install.stable.tgz
+    dest: /usr/local/ispmgr
+    remote_src: yes
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6" and ansible_architecture != 'x86_64'
+
+- name: Update packege cache
+  shell: /usr/local/ispmgr/sbin/pkgctl -D cache
+
+- name: Install software webserver
+  shell: "/usr/local/ispmgr/sbin/pkgctl install {item}"
+  with_items:
+    - apache
+    - nginx
+
+- name: Install FTP server
+  shell: /usr/local/ispmgr/sbin/pkgctl install php
+
+- name: Install FTP server
+  shell: /usr/local/ispmgr/sbin/pkgctl install vsftpd
+
+- name: Install MySQL
+  shell: /usr/local/ispmgr/sbin/pkgctl install mysql
+
+- name: Install phpmyadmin
+  shell: /usr/local/ispmgr/sbin/pkgctl install myadmin
+
+- name: Install squirrelmail
+  shell: /usr/local/ispmgr/sbin/pkgctl install myadmin phpmyadmin
+
+- name: Install MTA
+  shell: /usr/local/ispmgr/sbin/pkgctl install smtp exim
+
+- name: Activate webserver
+  shell: "/usr/local/ispmgr/sbin/pkgctl activate {item}"
+  with_items:
+    - apache
+    - nginx
+
+- name: Activate FTP server
+  shell: /usr/local/ispmgr/sbin/pkgctl activate php
+
+- name: Activate FTP server
+  shell: /usr/local/ispmgr/sbin/pkgctl activate ftp
+
+- name: Activate MySQL
+  shell: /usr/local/ispmgr/sbin/pkgctl activate mysql
+
+- name: Activate phpmyadmin
+  shell: /usr/local/ispmgr/sbin/pkgctl activate myadmin
+
+- name: Activate MTA
+  shell: /usr/local/ispmgr/sbin/pkgctl activate smtp
+
+- name: Update packege cache
+  shell: /usr/local/ispmgr/sbin/pkgctl -D cache
+
+- name: Agree rules
+  shell: echo "Option Agree" >> /usr/local/ispmgr/etc/ispmgr.conf
+
+- name: Kill ISPmanager
+  shell: killall -9 ispmgr
+
+- name: reboot host
+  shell: /sbin/shutdown -r now
+  become: true
