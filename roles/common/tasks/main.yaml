@@ -18,3 +18,44 @@
   yum:
     name: '*'
     state: latest
+
+- name: Install libselinux-python bindings
+  yum: name=libselinux-python state=present
+
+- name: Set SELinux policy and state
+  selinux:
+    state: disabled
+  register: selinux     
+
+- name: reboot host
+  shell: nohup bash -c "sleep 2s && reboot" &
+  register: reboot
+  when: selinux.changed
+
+- name: wait for host boot
+  local_action:
+    module: wait_for
+    host: "{{ ansible_ssh_host }}"
+    port: 22
+    delay: "{{ boot_wait | default(60) }}"
+    timeout: 120
+    state: started
+  when: reboot.changed
+
+- name: Install NTPd
+  yum:
+    name: ntp
+    state: installed
+
+- name: install unzip, git, vim, nano, screen
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+      - unzip
+      - git
+      - vim
+      - nano
+      - screen
+      - vnstat
+      - htop
