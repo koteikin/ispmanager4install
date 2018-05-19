@@ -51,14 +51,14 @@
 - name: Install phpmyadmin
   shell: /usr/local/ispmgr/sbin/pkgctl install myadmin
 
-- name: Install squirrelmail
-  shell: /usr/local/ispmgr/sbin/pkgctl install webmail
+- name: Install LDA
+  shell: /usr/local/ispmgr/sbin/pkgctl install lda
+
+- name: Install POP3/IMAP
+  shell: /usr/local/ispmgr/sbin/pkgctl install pop3
 
 - name: Install SMTP
   shell: /usr/local/ispmgr/sbin/pkgctl install smtp exim
-
-- name: Install LDA
-  shell: /usr/local/ispmgr/sbin/pkgctl install lda
 
 - name: Install DNS
   shell: /usr/local/ispmgr/sbin/pkgctl install dns
@@ -87,14 +87,14 @@
 - name: Activate phpmyadmin
   shell: /usr/local/ispmgr/sbin/pkgctl activate myadmin
 
-- name: Activate MTA
-  shell: /usr/local/ispmgr/sbin/pkgctl activate smtp exim
+- name: Activate POP3/IMAP
+  shell: /usr/local/ispmgr/sbin/pkgctl activate pop3
 
 - name: Activate LDA
   shell: /usr/local/ispmgr/sbin/pkgctl activate lda 
 
-- name: Activate squirrelmail
-  shell: /usr/local/ispmgr/sbin/pkgctl activate webmail
+- name: Activate MTA
+  shell: /usr/local/ispmgr/sbin/pkgctl activate smtp exim
 
 - name: Activate squirrelmail
   shell: /usr/local/ispmgr/sbin/pkgctl activate dns  

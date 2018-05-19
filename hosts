@@ -1,3 +1,4 @@
 [install]
-195.16.90.56 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=2AOsf5ml60zIQ8G2Cb
+127.0.0.1 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=PASS
+
 

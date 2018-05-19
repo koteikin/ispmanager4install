@@ -22,10 +22,14 @@
 - name: Install libselinux-python bindings
   yum: name=libselinux-python state=present
 
-- name: Set SELinux policy and state
-  selinux:
-    state: disabled
-  register: selinux     
+#- name: Set SELinux policy and state
+#  selinux:
+#    state: disabled
+#  register: selinux     
+
+- name: Disable SElinux permanetly
+  lineinfile: dest=/etc/selinux/config state=present create=no regexp='SELINUX=.*' line='SELINUX=disabled'
+  register: selinux  
 
 - name: reboot host
   shell: nohup bash -c "sleep 2s && reboot" &
@@ -35,7 +39,7 @@
 - name: wait for host boot
   local_action:
     module: wait_for
-    host: "{{ ansible_ssh_host }}"
+    host: "{{ ansible_default_ipv4.address }}"
     port: 22
     delay: "{{ boot_wait | default(60) }}"
     timeout: 120
