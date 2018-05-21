@@ -22,11 +22,6 @@
 - name: Install libselinux-python bindings
   yum: name=libselinux-python state=present
 
-#- name: Set SELinux policy and state
-#  selinux:
-#    state: disabled
-#  register: selinux     
-
 - name: Disable SElinux permanetly
   lineinfile: dest=/etc/selinux/config state=present create=no regexp='SELINUX=.*' line='SELINUX=disabled'
   register: selinux  
